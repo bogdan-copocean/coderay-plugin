@@ -1,0 +1,13 @@
+{
+  "name": "coderay",
+  "description": "Run coderay-skeleton before every file read. Get signatures and exact line ranges — never dump whole files.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Bogdan Copocean",
+    "email": "bogdancopocean@gmail.com"
+  },
+  "homepage": "https://github.com/bogdan-copocean/coderay-plugin",
+  "repository": "https://github.com/bogdan-copocean/coderay-plugin",
+  "license": "MIT",
+  "keywords": ["skeleton", "navigation", "token-efficiency", "cost-optimization", "file-reading", "context-window", "agents", "code-navigation", "tree-sitter"]
+}

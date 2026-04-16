@@ -1,0 +1,47 @@
+#!/bin/sh
+set -e
+
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)         ARCH="amd64" ;;
+    aarch64|arm64)  ARCH="arm64" ;;
+esac
+
+BINARY_NAME="coderay-skeleton-${OS}-${ARCH}"
+CLAUDE_PLUGIN_DATA="${CLAUDE_PLUGIN_DATA:-${HOME}/.claude/plugins/data}"
+DOWNLOADED="${CLAUDE_PLUGIN_DATA}/${BINARY_NAME}"
+REPO="bogdan-copocean/coderay-plugin"
+
+# Use previously downloaded binary
+if [ -f "$DOWNLOADED" ]; then
+    exec "$DOWNLOADED" "$@"
+fi
+
+# Download from GitHub Releases
+RELEASE_URL="https://github.com/${REPO}/releases/latest/download/${BINARY_NAME}"
+
+echo "coderay-skeleton: downloading binary for ${OS}/${ARCH} ..." >&2
+
+mkdir -p "${CLAUDE_PLUGIN_DATA}"
+
+if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$RELEASE_URL" -o "$DOWNLOADED" || {
+        echo "  Download failed. Build manually: make build" >&2
+        echo "  See https://github.com/${REPO}#build" >&2
+        exit 1
+    }
+elif command -v wget >/dev/null 2>&1; then
+    wget -q "$RELEASE_URL" -O "$DOWNLOADED" || {
+        echo "  Download failed. Build manually: make build" >&2
+        echo "  See https://github.com/${REPO}#build" >&2
+        exit 1
+    }
+else
+    echo "  curl and wget not found. Build manually: make build" >&2
+    echo "  See https://github.com/${REPO}#build" >&2
+    exit 1
+fi
+
+chmod +x "$DOWNLOADED"
+exec "$DOWNLOADED" "$@"
