@@ -1,0 +1,4 @@
+# dev build artifact at repo root
+/coderay-skeleton
+
+# platform binaries are tracked in bin/ — do not ignore them
